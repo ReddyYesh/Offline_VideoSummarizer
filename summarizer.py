@@ -4,27 +4,23 @@ from typing import List
 
 
 def split_into_sentences(text: str, max_words_per_chunk: int = 40) -> List[str]:
-    """
-    Tries to split text into sentences using punctuation.
-    If that fails (e.g., Vosk transcript without .?!), falls back to
-    splitting into fixed-size word chunks.
-    """
+   
     text = text.strip()
     if not text:
         return []
 
-    # First try normal sentence splitting using punctuation
+    
     sentences = re.split(r'(?<=[.!?])\s+', text)
     sentences = [s.strip() for s in sentences if s.strip()]
 
-    # If we got multiple sentences, just use them
+    
     if len(sentences) > 1:
         return sentences
 
-    # Otherwise, fallback: chunk by words (for punctuation-less transcripts)
+    
     words = text.split()
     if len(words) <= max_words_per_chunk:
-        # Very short text, return as one chunk
+        
         return [" ".join(words)]
 
     chunks = []
@@ -45,7 +41,7 @@ class OfflineSummarizer:
     def __init__(self, max_sentences: int = 5):
         self.max_sentences = max_sentences
 
-        # Very small stopword list (can be extended)
+        
         self.stopwords = set(
             [
                 "the", "is", "am", "are", "a", "an", "and", "or", "of", "to",
@@ -62,7 +58,7 @@ class OfflineSummarizer:
         if not text:
             return ""
 
-        # Now this will either be real sentences or word chunks
+        
         sentences = split_into_sentences(text)
 
         if not sentences:
@@ -80,7 +76,7 @@ class OfflineSummarizer:
             score = sum(freq.get(w, 0) for w in sent_words)
             sentence_scores.append((score, sent))
 
-        # Pick top N sentences (never more than we actually have)
+        # Pick top N sentences 
         sentence_scores.sort(reverse=True, key=lambda x: x[0])
         top_n = min(self.max_sentences, len(sentence_scores))
         top_sentences = [s for _, s in sentence_scores[:top_n]]
@@ -91,3 +87,4 @@ class OfflineSummarizer:
 
         summary = " ".join(top_sentences)
         return summary.strip()
+
