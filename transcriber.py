@@ -4,20 +4,18 @@ import subprocess
 from vosk import Model, KaldiRecognizer
 
 
-# Change this to your actual model path
+
 MODEL_PATH = os.path.join("models", "vosk-model-small-en-us-0.15")
 
-# Full path to ffmpeg.exe so we don't fight with PATH
+
 FFMPEG_EXE = r"C:\ffmpeg\bin\ffmpeg.exe"
 
 
 def convert_to_wav(input_path: str, output_path: str, sample_rate: int = 16000) -> None:
-    """
-    Convert any audio format (webm, m4a, etc.) to 16kHz mono WAV using ffmpeg.
-    """
+    
     cmd = [
         FFMPEG_EXE,
-        "-y",           # overwrite
+        "-y",           
         "-i", input_path,
         "-ac", "1",     # mono
         "-ar", str(sample_rate),  # sample rate
@@ -40,9 +38,7 @@ class OfflineTranscriber:
         self.sample_rate = sample_rate
 
     def transcribe(self, audio_path: str) -> str:
-        """
-        Transcribe the given audio file and return plain text.
-        """
+        
         print(f"[STT] Converting audio to WAV: {audio_path}")
         tmp_wav = "temp_stt.wav"
         convert_to_wav(audio_path, tmp_wav, sample_rate=self.sample_rate)
@@ -80,3 +76,4 @@ class OfflineTranscriber:
         print(f"[STT] Transcription complete. Length (chars): {len(transcript)}")
 
         return transcript
+
