@@ -1,0 +1,7 @@
+streamlit
+yt-dlp
+vosk
+soundfile
+numpy
+ffmpeg-python
+pyttsx3
